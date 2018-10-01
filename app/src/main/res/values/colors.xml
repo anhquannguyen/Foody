@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#F5511E</color>
+    <color name="colorPrimaryDark">#F5511E</color>
+    <color name="colorAccent">#273238</color>
+
+    <color name="colorSelectedItem">#3000</color>
+    <color name="colorFbButton">#36567d</color>
+    <color name="colorGgButton">#bf381c</color>
+    <color name="colorOverlay">#6000</color>
+</resources>
