@@ -36,19 +36,27 @@
         </activity>
         <activity
             android:name=".ui.FoodActivity"
+            android:label="@string/food_activity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.OrderActivity"
+            android:label="@string/order_activity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
+        <activity
+            android:name=".ui.SigninActivity"
+            android:label="@string/signin_activity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".ui.CheckoutActivity"
+            android:label="@string/checkout_activity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- Goolge API Key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_map_API" />
+            android:value="@string/google_API" />
         <!-- Broadcast detecting network status -->
         <receiver
             android:name=".ConnectivityReceiver"

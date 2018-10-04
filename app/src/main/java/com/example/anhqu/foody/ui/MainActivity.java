@@ -19,6 +19,7 @@ import android.widget.ImageView;
 
 import com.example.anhqu.foody.ConnectivityReceiver;
 import com.example.anhqu.foody.R;
+import com.example.anhqu.foody.SessionManager;
 import com.example.anhqu.foody.model.DrawerItem;
 import com.example.anhqu.foody.model.localDb.DaoRepository;
 import com.example.anhqu.foody.ui.adapter.DrawerAdapter;
@@ -54,11 +55,10 @@ public class MainActivity extends BaseActivity {
 
     protected static List<DrawerItem> itemList() {
         List<DrawerItem> itemList = new ArrayList<>(10);
-        itemList.add(new DrawerItem(1, "List"));
-        itemList.add(new DrawerItem(2, "Offers"));
-        itemList.add(new DrawerItem(3, "Orders"));
-        itemList.add(new DrawerItem(4, "Favorites"));
-        itemList.add(new DrawerItem(5, "Log out"));
+        itemList.add(new DrawerItem(0, "List"));
+        itemList.add(new DrawerItem(1, "Offers"));
+        itemList.add(new DrawerItem(2, "Orders"));
+        itemList.add(new DrawerItem(3, "Log out"));
         return itemList;
     }
 
@@ -198,19 +198,14 @@ public class MainActivity extends BaseActivity {
 
                 break;
             case 3:
-
-                break;
-            case 4:
-
+                new SessionManager(this).signOut();
+                Log.d(TAG, "navigationHandler: sign out");
                 break;
         }
-        toggle.runWhenIdle(new Runnable() {
-            @Override
-            public void run() {
-                if (fragment != null) {
-                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_layout, fragment).commit();
-                }
+        toggle.runWhenIdle(() -> {
+            if (fragment != null) {
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.content_layout, fragment).commit();
             }
         });
         drawerLayout.closeDrawers();

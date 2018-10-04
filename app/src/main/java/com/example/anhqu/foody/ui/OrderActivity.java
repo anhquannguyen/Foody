@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.anhqu.foody.R;
+import com.example.anhqu.foody.SessionManager;
 import com.example.anhqu.foody.model.OrderItem;
 import com.example.anhqu.foody.model.localDb.DaoRepository;
 import com.example.anhqu.foody.ui.adapter.OrderAdapter;
@@ -48,7 +48,6 @@ public class OrderActivity extends BaseActivity implements OrderAdapter.onClickI
     Button btnCheckout;
     @BindView(R.id.img_action)
     ImageView imgOrder;
-    private BottomSheetBehavior sheetBehavior;
     private OrderAdapter adapter;
     private DaoRepository repository;
     private List<OrderItem> itemList;
@@ -64,12 +63,11 @@ public class OrderActivity extends BaseActivity implements OrderAdapter.onClickI
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        setTitle("Order");
+
         repository = new DaoRepository(this);
         itemList = new ArrayList<>();
         dSubject = BehaviorSubject.create();
 
-        sheetBehavior = BottomSheetBehavior.from(cartBottomSheet);
         setRecyclerView();
         setImgAction();
         getOrder();
@@ -115,7 +113,6 @@ public class OrderActivity extends BaseActivity implements OrderAdapter.onClickI
                         dSubject.onNext(totalPrice);
                         itemList.addAll(orderItems);
                         adapter.notifyDataSetChanged();
-                        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                     }
                 }, throwable -> Log.d(TAG, "getOrder: " + throwable));
     }
@@ -178,8 +175,8 @@ public class OrderActivity extends BaseActivity implements OrderAdapter.onClickI
 
     private void observerSheetView() {
         dSubject.observeOn(AndroidSchedulers.mainThread()).subscribe(aDouble -> {
-                    txtPrice.setText(String.format("%s $", aDouble));
-                });
+            txtPrice.setText(String.format("%s $", aDouble));
+        });
     }
 
     private void updateRecyclerParam() {
@@ -211,7 +208,13 @@ public class OrderActivity extends BaseActivity implements OrderAdapter.onClickI
 
     @OnClick(R.id.btn_checkout)
     public void onViewClicked() {
-        Intent i = new Intent(OrderActivity.this, CheckoutActivity.class);
+        Intent i;
+        boolean isloggedin =  new SessionManager(this).isLoggedIn();
+        if (isloggedin){
+            i = new Intent(OrderActivity.this,CheckoutActivity.class);
+        }else {
+            i = new Intent(OrderActivity.this,SigninActivity.class);
+        }
         startActivity(i);
     }
 }

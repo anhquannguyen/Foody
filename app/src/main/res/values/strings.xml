@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">Foody</string>
-    <string name="google_map_API">AIzaSyByAL_g7PJBlTiMKQY6wVLtukU-IZ3NC_8</string>
+    <string name="google_API">AIzaSyDvhkgepKqtll9BGwQA_ReBTJbrnIzVaxA</string>
+
+    <string name="food_activity">Food</string>
+    <string name="order_activity">Order</string>
+    <string name="signin_activity">Sign in</string>
+    <string name="signup_activity">Sign up</string>
+    <string name="checkout_activity">Checkout</string>
+    <string name="place_activity">Place order</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -17,6 +24,6 @@
     <string name="action_change_loct">Change</string>
     <string name="text_set_datetime">Set your time now!</string>
     <string name="action_place_order">Place order</string>
-    <string name="notification_conn">No internet access</string>
+    <string name="notification_conn">No network</string>
     <string name="button_retry">Retry</string>
 </resources>

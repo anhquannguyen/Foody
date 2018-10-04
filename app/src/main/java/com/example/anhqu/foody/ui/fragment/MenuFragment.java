@@ -31,6 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -40,7 +41,6 @@ import io.reactivex.schedulers.Schedulers;
 public class MenuFragment extends Fragment {
     private static final String KEY_RC = "recycler_data";
     private static final String KEY_ID = "menu_id";
-    private static final String KEY_NAME = "menu_name";
     private final String TAG = this.getTag();
     Unbinder unbinder;
     List<Menu> menuList;
@@ -72,7 +72,6 @@ public class MenuFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
     }
 
     @Override
@@ -106,10 +105,11 @@ public class MenuFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //disposable.dispose();
+        getApi().dispose();
     }
 
     private void setRecyclerView() {
+        progressBar.setVisibility(View.VISIBLE);
         menuList = new ArrayList<>(10);
         adapter = new MenuAdapter(menuList, getContext());
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
@@ -121,8 +121,7 @@ public class MenuFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 String menuId = menuList.get(position).getmId();
-                String menuName = menuList.get(position).getmName();
-                foodActivity(menuId, menuName);
+                foodActivity(menuId);
             }
 
             @Override
@@ -132,10 +131,9 @@ public class MenuFragment extends Fragment {
         }));
     }
 
-    private void getApi() {
-        progressBar.setVisibility(View.VISIBLE);
+    private Disposable getApi() {
         ApiInterface api = ApiClient.getClient().create(ApiInterface.class);
-        api.getMenuList().subscribeOn(Schedulers.io())
+        return api.get().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(menus -> {
                     menuList.addAll(menus);
@@ -143,17 +141,12 @@ public class MenuFragment extends Fragment {
                         progressBar.setVisibility(View.GONE);
                     }
                     adapter.notifyDataSetChanged();
-                }, throwable -> {
-                    Log.d(TAG, "getApi: " + throwable);
-                });
+                }, throwable -> Log.d(TAG, "getApi: " + throwable));
     }
 
-    private void foodActivity(String id, String name) {
+    private void foodActivity(String id) {
         Intent i = new Intent(getContext(), FoodActivity.class);
-        b = new Bundle();
-        b.putString(KEY_ID, id);
-        b.putString(KEY_NAME, name);
-        i.putExtras(b);
+        i.putExtra(KEY_ID,id);
         getContext().startActivity(i);
     }
 }

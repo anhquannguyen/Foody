@@ -47,7 +47,6 @@ public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInt
     private DaoRepository repository;
     private List<OrderItem> itemList;
     private String id;
-    private String name;
     private boolean isClear = false;
     private boolean isAppear = false;
 
@@ -58,12 +57,10 @@ public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInt
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        Bundle b = getIntent().getExtras();
-        if (b != null) {
-            id = b.getString("menu_id");
-            name = b.getString("menu_name");
+        Intent i = getIntent();
+        if (i != null) {
+            id = i.getStringExtra("menu_id");
         }
-        setTitle(name);
         repository = new DaoRepository(this);
         itemList = new ArrayList<>();
 
@@ -117,7 +114,7 @@ public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInt
                     if (integer != 0) {
                         imgOrder.setImageResource(R.drawable.ic_cart);
                         imgOrder.setOnClickListener(view -> {
-                            Intent i = new Intent(FoodActivity.this, OrderActivity.class);
+                            Intent i = new Intent(this, OrderActivity.class);
                             startActivity(i);
                         });
                         imgOrder.setVisibility(View.VISIBLE);
@@ -136,7 +133,7 @@ public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInt
     private void getApi(final String id) {
         progressBar.setVisibility(View.VISIBLE);
         final ApiInterface api = ApiClient.getClient().create(ApiInterface.class);
-        api.getFoodsByMenu(id).subscribeOn(Schedulers.io())
+        api.get(id).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(foods -> {
                     if (foods != null) {
