@@ -1,4 +1,4 @@
-package com.example.anhqu.foody.ui.fragment;
+package com.example.anhqu.foody.view.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

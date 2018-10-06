@@ -38,7 +38,6 @@ public class SessionManager {
     }
 
     public void create(int id, String name, String pw, String fname, String phone) {
-        // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
         editor.putInt(KEY_ID, id);
         editor.putString(KEY_NAME, name);
@@ -66,6 +65,10 @@ public class SessionManager {
 
     public String getAddress() {
         return pref.getString(KEY_ADD, null);
+    }
+
+    public int getUserId(){
+        return pref.getInt(KEY_ID, 0);
     }
 
     public void signOut() {

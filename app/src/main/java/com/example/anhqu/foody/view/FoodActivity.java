@@ -1,4 +1,4 @@
-package com.example.anhqu.foody.ui;
+package com.example.anhqu.foody.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,8 +20,8 @@ import com.example.anhqu.foody.model.Food;
 import com.example.anhqu.foody.model.OrderItem;
 import com.example.anhqu.foody.model.api.ApiClient;
 import com.example.anhqu.foody.model.api.ApiInterface;
-import com.example.anhqu.foody.model.localDb.DaoRepository;
-import com.example.anhqu.foody.ui.adapter.FoodAdapter;
+import com.example.anhqu.foody.model.database.DaoRepository;
+import com.example.anhqu.foody.view.adapter.FoodAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,6 +135,9 @@ public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInt
         final ApiInterface api = ApiClient.getClient().create(ApiInterface.class);
         api.get(id).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(foods -> {
+                    Log.d(TAG, "getApi: " + foods.size());
+                })
                 .subscribe(foods -> {
                     if (foods != null) {
                         for (Food o : foods) {
@@ -164,7 +167,9 @@ public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInt
     }
 
     private void addOrder(List<OrderItem> item, String id) {
-        repository.addOrder(item).subscribe(() -> getById(id), throwable -> Log.d(TAG, "addOrder: " + throwable));
+        repository.addOrder(item)
+                .subscribe(() -> getById(id)
+                        , throwable -> Log.d(TAG, "addOrder: " + throwable));
     }
 
     private void updateOrder(OrderItem item) {

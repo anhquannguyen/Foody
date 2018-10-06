@@ -1,4 +1,4 @@
-package com.example.anhqu.foody.model.localDb;
+package com.example.anhqu.foody.model.database;
 
 import android.content.Context;
 
@@ -9,7 +9,6 @@ import java.util.List;
 import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -24,34 +23,34 @@ public class DaoRepository {
     }
 
     public Maybe<List<OrderItem>> getInOrder() {
-        return Database.getInstance(context).Daodb().getInOrder().subscribeOn(Schedulers.io());
+        return Database.getInstance(context).Dao().getInOrder().subscribeOn(Schedulers.io());
     }
 
     public Maybe<List<OrderItem>> getById(String id) {
-        return Database.getInstance(context).Daodb().getById(id).subscribeOn(Schedulers.io());
+        return Database.getInstance(context).Dao().getById(id).subscribeOn(Schedulers.io());
     }
 
     public Single<Integer> countInOrder() {
-        return Database.getInstance(context).Daodb().getCountInOrder().subscribeOn(Schedulers.io());
+        return Database.getInstance(context).Dao().getCountInOrder().subscribeOn(Schedulers.io());
     }
 
     public Completable addOrder(List<OrderItem> item) {
-        return Completable.fromAction(() -> Database.getInstance(context).Daodb().insert(item)).subscribeOn(Schedulers.io());
+        return Completable.fromAction(() -> Database.getInstance(context).Dao().insert(item)).subscribeOn(Schedulers.io());
     }
 
     public Completable updateOrder(OrderItem item) {
         return Completable.fromAction(() -> Database.getInstance(context)
-                .Daodb().edit(item)).subscribeOn(Schedulers.io());
+                .Dao().edit(item)).subscribeOn(Schedulers.io());
 
     }
 
 /*    public Completable removeOrder(OrderItem item) {
         return Completable.fromAction(() -> Database.getInstance(context)
-                .Daodb().remove(item)).subscribeOn(Schedulers.io());
+                .Dao().remove(item)).subscribeOn(Schedulers.io());
     }
 
     public Completable clearAllOrder() {
         return Completable.fromAction(() -> Database.getInstance(context)
-                .Daodb().clearOrder()).subscribeOn(Schedulers.io());
+                .Dao().clearOrder()).subscribeOn(Schedulers.io());
     }*/
 }

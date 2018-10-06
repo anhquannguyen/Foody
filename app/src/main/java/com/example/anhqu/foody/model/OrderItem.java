@@ -26,14 +26,14 @@ public class OrderItem implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "o_id")
     private int id;
-    @ColumnInfo(name = "placed_order_id")
+    @ColumnInfo(name = "order_id")
     private int placedOrderId;
-    @Embedded
-    private Food food;
     @ColumnInfo(name = "quantity")
     private int quantity;
     @ColumnInfo(name = "total_price")
     private double totalPrice;
+    @Embedded
+    private Food food;
 
     public OrderItem(Food food) {
         this.food = food;
@@ -87,7 +87,6 @@ public class OrderItem implements Parcelable {
         this.quantity = quantity;
     }
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -97,7 +96,7 @@ public class OrderItem implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
         dest.writeInt(this.placedOrderId);
-        dest.writeParcelable(this.food, flags);
+        dest.writeParcelable((Parcelable) this.food, flags);
         dest.writeInt(this.quantity);
         dest.writeDouble(this.totalPrice);
     }

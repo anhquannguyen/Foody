@@ -1,4 +1,4 @@
-package com.example.anhqu.foody.ui;
+package com.example.anhqu.foody.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,12 +11,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.anhqu.foody.R;
 import com.example.anhqu.foody.SessionManager;
+import com.example.anhqu.foody.model.Order;
 import com.example.anhqu.foody.model.Payment;
-import com.example.anhqu.foody.ui.adapter.PaymentAdapter;
+import com.example.anhqu.foody.model.api.ApiClient;
+import com.example.anhqu.foody.model.api.ApiInterface;
+import com.example.anhqu.foody.model.database.DaoRepository;
+import com.example.anhqu.foody.view.adapter.PaymentAdapter;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -26,6 +29,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by anhqu on 9/23/2018.
@@ -76,7 +80,6 @@ public class CheckoutActivity extends BaseActivity {
 
     private void setRecyclerView() {
         payments = new Payment().getPayment();
-        Log.d(TAG, "setRecyclerView: " + payments.get(0).getpName());
         adapter = new PaymentAdapter(payments, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, 1, false));
         recyclerView.setHasFixedSize(true);
@@ -97,6 +100,30 @@ public class CheckoutActivity extends BaseActivity {
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
         }
+    }
+
+    private void setPlaceOrder(){
+        int uId = sessionManager.getUserId();
+        String location = sessionManager.getAddress();
+        new DaoRepository(this).getInOrder()
+                .subscribe(orderItems -> {
+                    Order order = new Order(uId, "2018-10-06 9:00:00", location, 1, orderItems);
+                    placeOrder(order);
+                });
+
+    }
+
+    private void placeOrder(Order order){
+        final ApiInterface api = ApiClient.getClient().create(ApiInterface.class);
+        api.place(order).subscribeOn(Schedulers.io())
+                .subscribe((aBoolean, throwable) -> {
+                    if (aBoolean != null) {
+                        Log.d(TAG, "onViewClicked: " + aBoolean);
+                    }
+                    if (throwable != null) {
+                        Log.d(TAG, "onViewClicked: " + throwable);
+                    }
+                });
     }
 
     @Override
@@ -120,7 +147,7 @@ public class CheckoutActivity extends BaseActivity {
                 initPlacePicker();
                 break;
             case R.id.btn_place_order:
-                Toast.makeText(this, "Update's coming...", Toast.LENGTH_SHORT).show();
+                setPlaceOrder();
                 break;
         }
     }

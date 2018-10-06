@@ -1,4 +1,4 @@
-package com.example.anhqu.foody.model.localDb;
+package com.example.anhqu.foody.model.database;
 
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
@@ -29,5 +29,5 @@ public abstract class Database extends RoomDatabase {
                 DATABASE_NAME).build();
     }
 
-    public abstract DaoDb Daodb();
+    public abstract Dao Dao();
 }

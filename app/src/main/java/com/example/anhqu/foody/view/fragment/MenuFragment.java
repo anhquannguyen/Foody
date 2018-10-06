@@ -1,4 +1,4 @@
-package com.example.anhqu.foody.ui.fragment;
+package com.example.anhqu.foody.view.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,9 +18,9 @@ import com.example.anhqu.foody.R;
 import com.example.anhqu.foody.model.Menu;
 import com.example.anhqu.foody.model.api.ApiClient;
 import com.example.anhqu.foody.model.api.ApiInterface;
-import com.example.anhqu.foody.ui.FoodActivity;
-import com.example.anhqu.foody.ui.MainActivity;
-import com.example.anhqu.foody.ui.adapter.MenuAdapter;
+import com.example.anhqu.foody.view.FoodActivity;
+import com.example.anhqu.foody.view.MainActivity;
+import com.example.anhqu.foody.view.adapter.MenuAdapter;
 import com.example.anhqu.foody.utils.GridSpacingItemDecoration;
 import com.example.anhqu.foody.utils.RecyclerTouchListener;
 

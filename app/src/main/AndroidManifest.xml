@@ -25,7 +25,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".view.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -35,21 +35,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.FoodActivity"
+            android:name=".view.FoodActivity"
             android:label="@string/food_activity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.OrderActivity"
+            android:name=".view.OrderActivity"
             android:label="@string/order_activity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
-            android:name=".ui.SigninActivity"
+            android:name=".view.SigninActivity"
             android:label="@string/signin_activity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
-            android:name=".ui.CheckoutActivity"
+            android:name=".view.CheckoutActivity"
             android:label="@string/checkout_activity"
             android:theme="@style/AppTheme.NoActionBar" />
 

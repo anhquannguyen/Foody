@@ -1,4 +1,4 @@
-package com.example.anhqu.foody.ui.adapter;
+package com.example.anhqu.foody.view.adapter;
 
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;

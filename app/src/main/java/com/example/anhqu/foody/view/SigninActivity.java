@@ -1,4 +1,4 @@
-package com.example.anhqu.foody.ui;
+package com.example.anhqu.foody.view;
 
 import android.content.Intent;
 import android.os.Bundle;

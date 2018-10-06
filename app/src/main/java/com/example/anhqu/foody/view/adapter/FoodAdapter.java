@@ -1,4 +1,4 @@
-package com.example.anhqu.foody.ui.adapter;
+package com.example.anhqu.foody.view.adapter;
 
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
@@ -14,7 +14,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.anhqu.foody.R;
 import com.example.anhqu.foody.model.Food;
 import com.example.anhqu.foody.model.OrderItem;
-import com.example.anhqu.foody.ui.FoodActivity;
+import com.example.anhqu.foody.view.FoodActivity;
 
 import java.util.List;
 

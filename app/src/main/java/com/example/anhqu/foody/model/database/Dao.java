@@ -1,4 +1,4 @@
-package com.example.anhqu.foody.model.localDb;
+package com.example.anhqu.foody.model.database;
 
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
@@ -15,7 +15,7 @@ import io.reactivex.Single;
  * Created by anhqu on 2/26/2018.
  */
 @android.arch.persistence.room.Dao
-public interface DaoDb {
+public interface Dao {
 
     @Insert
     long[] insert(List<OrderItem> orderItem);

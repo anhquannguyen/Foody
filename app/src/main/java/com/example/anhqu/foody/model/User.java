@@ -28,39 +28,19 @@ public class User implements Serializable {
         return uId;
     }
 
-    public void setuId(int uId) {
-        this.uId = uId;
-    }
-
     public String getuName() {
         return uName;
-    }
-
-    public void setuName(String uName) {
-        this.uName = uName;
     }
 
     public String getuPw() {
         return uPw;
     }
 
-    public void setuPw(String uPw) {
-        this.uPw = uPw;
-    }
-
     public String getuFullName() {
         return uFullName;
     }
 
-    public void setuFullName(String uFullName) {
-        this.uFullName = uFullName;
-    }
-
     public String getuMobile() {
         return uMobile;
-    }
-
-    public void setuMobile(String uMobile) {
-        this.uMobile = uMobile;
     }
 }

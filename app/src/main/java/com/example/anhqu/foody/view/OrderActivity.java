@@ -1,4 +1,4 @@
-package com.example.anhqu.foody.ui;
+package com.example.anhqu.foody.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,9 +17,9 @@ import android.widget.TextView;
 import com.example.anhqu.foody.R;
 import com.example.anhqu.foody.SessionManager;
 import com.example.anhqu.foody.model.OrderItem;
-import com.example.anhqu.foody.model.localDb.DaoRepository;
-import com.example.anhqu.foody.ui.adapter.OrderAdapter;
-import com.example.anhqu.foody.ui.fragment.SheetOrderFragment;
+import com.example.anhqu.foody.model.database.DaoRepository;
+import com.example.anhqu.foody.view.adapter.OrderAdapter;
+import com.example.anhqu.foody.view.fragment.SheetOrderFragment;
 
 import java.util.ArrayList;
 import java.util.List;

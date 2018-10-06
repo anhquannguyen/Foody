@@ -1,4 +1,4 @@
-package com.example.anhqu.foody.ui;
+package com.example.anhqu.foody.view;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,9 +21,9 @@ import com.example.anhqu.foody.ConnectivityReceiver;
 import com.example.anhqu.foody.R;
 import com.example.anhqu.foody.SessionManager;
 import com.example.anhqu.foody.model.DrawerItem;
-import com.example.anhqu.foody.model.localDb.DaoRepository;
-import com.example.anhqu.foody.ui.adapter.DrawerAdapter;
-import com.example.anhqu.foody.ui.fragment.MenuFragment;
+import com.example.anhqu.foody.model.database.DaoRepository;
+import com.example.anhqu.foody.view.adapter.DrawerAdapter;
+import com.example.anhqu.foody.view.fragment.MenuFragment;
 import com.example.anhqu.foody.utils.RecyclerTouchListener;
 
 import java.util.ArrayList;
