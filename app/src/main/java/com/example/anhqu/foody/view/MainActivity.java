@@ -199,7 +199,6 @@ public class MainActivity extends BaseActivity {
                 break;
             case 3:
                 new SessionManager(this).signOut();
-                Log.d(TAG, "navigationHandler: sign out");
                 break;
         }
         toggle.runWhenIdle(() -> {
