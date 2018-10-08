@@ -14,7 +14,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.anhqu.foody.R;
 import com.example.anhqu.foody.model.Food;
 import com.example.anhqu.foody.model.OrderItem;
-import com.example.anhqu.foody.view.FoodActivity;
+import com.example.anhqu.foody.view.ui.FoodActivity;
 
 import java.util.List;
 

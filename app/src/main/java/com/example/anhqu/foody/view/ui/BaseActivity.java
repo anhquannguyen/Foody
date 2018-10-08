@@ -1,4 +1,4 @@
-package com.example.anhqu.foody.view;
+package com.example.anhqu.foody.view.ui;
 
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
