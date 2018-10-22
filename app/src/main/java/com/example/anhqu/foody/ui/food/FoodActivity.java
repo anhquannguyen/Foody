@@ -16,11 +16,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.example.anhqu.foody.R;
-import com.example.anhqu.foody.data.database.model.Food;
 import com.example.anhqu.foody.data.database.model.OrderItem;
-import com.example.anhqu.foody.data.network.ApiClient;
-import com.example.anhqu.foody.data.network.ApiInterface;
-import com.example.anhqu.foody.data.database.DaoRepository;
 import com.example.anhqu.foody.ui.BaseActivity;
 import com.example.anhqu.foody.ui.order.OrderActivity;
 
@@ -28,14 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by anhqu on 6/22/2017.
  */
 
-public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInterface {
+public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInterface, FoodView {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.recyclerView)
@@ -44,8 +38,8 @@ public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInt
     ProgressBar progressBar;
     @BindView(R.id.img_action)
     ImageView imgOrder;
+    private FoodPresenterImpl foodPresenter;
     private FoodAdapter adapter;
-    private DaoRepository repository;
     private List<OrderItem> itemList;
     private String id;
     private boolean isClear = false;
@@ -62,11 +56,11 @@ public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInt
         if (i != null) {
             id = i.getStringExtra("menu_id");
         }
-        repository = new DaoRepository(this);
+        foodPresenter = new FoodPresenterImpl(this, this);
         itemList = new ArrayList<>();
 
         setRecyclerView();
-        getById(id);
+        foodPresenter.getFoods(id);
     }
 
     @Override
@@ -78,20 +72,24 @@ public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInt
     protected void onResume() {
         super.onResume();
         if (isClear) {
-            getById(id);
+            foodPresenter.getFoods(id);
         }
-        getCountInOrder();
+        foodPresenter.getCount();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        itemList.clear();
-        adapter.notifyDataSetChanged();
-        isClear = true;
+        clearAdapter();
         if (isAppear) {
             isAppear = false;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        foodPresenter.clearDisposables();
     }
 
     @Override
@@ -109,90 +107,10 @@ public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInt
         recyclerView.setAdapter(adapter);
     }
 
-    private void getCountInOrder() {
-        repository.countInOrder().observeOn(AndroidSchedulers.mainThread())
-                .subscribe(integer -> {
-                    if (integer != 0) {
-                        imgOrder.setImageResource(R.drawable.ic_cart);
-                        imgOrder.setOnClickListener(view -> {
-                            Intent i = new Intent(this, OrderActivity.class);
-                            startActivity(i);
-                        });
-                        imgOrder.setVisibility(View.VISIBLE);
-                        if (!isAppear) {
-                            isAppear = true;
-                            onAppear(imgOrder);
-                        }
-                    } else {
-                        if (imgOrder.getVisibility() == View.VISIBLE) {
-                            imgOrder.setVisibility(View.INVISIBLE);
-                        }
-                    }
-                }, throwable -> Log.d(TAG, "getCountInOrder: " + throwable));
-    }
-
-    private void getApi(final String id) {
-        progressBar.setVisibility(View.VISIBLE);
-        final ApiInterface api = ApiClient.getClient().create(ApiInterface.class);
-        api.get(id).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(foods -> {
-                    Log.d(TAG, "getApi: " + foods.size());
-                })
-                .subscribe(foods -> {
-                    if (foods != null) {
-                        for (Food o : foods) {
-                            itemList.add(new OrderItem(o));
-                        }
-                        addOrder(itemList, id);
-                        if (progressBar != null) {
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    }
-                }, throwable -> Log.d(TAG, "getApi: " + throwable));
-    }
-
-    private void getById(String id) {
-        repository.getById(id).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(orderItems -> {
-                    if (orderItems.size() != 0) {
-                        if (itemList.size() != 0) {
-                            itemList.clear();
-                        }
-                        itemList.addAll(orderItems);
-                        adapter.notifyDataSetChanged();
-                    } else {
-                        getApi(id);
-                    }
-                }, throwable -> Log.d(TAG, "getById: " + throwable));
-    }
-
-    private void addOrder(List<OrderItem> item, String id) {
-        repository.addOrder(item)
-                .subscribe(() -> getById(id)
-                        , throwable -> Log.d(TAG, "addOrder: " + throwable));
-    }
-
-    private void updateOrder(OrderItem item) {
-        repository.updateOrder(item).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::getCountInOrder
-                        , throwable -> Log.d(TAG, "updateOrder: " + throwable));
-    }
-
-    private void removeOrder(OrderItem item) {
-        showSnackbar(item);
-        item.setQuantity(0);
-        item.setTotalPrice(0);
-        repository.updateOrder(item).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::getCountInOrder
-                        , throwable -> Log.d(TAG, "updateOrder: " + throwable));
-    }
-
-    private void showSnackbar(OrderItem item) {
-        String message = item.getQuantity() + " items removed.";
-
-        Snackbar snackbar = Snackbar.make(getWindow().getDecorView().getRootView(), message, Snackbar.LENGTH_SHORT);
-        snackbar.show();
+    private void clearAdapter(){
+        itemList.clear();
+        adapter.notifyDataSetChanged();
+        isClear = true;
     }
 
     public void onAppear(View view) {
@@ -204,11 +122,58 @@ public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInt
 
     @Override
     public void onClick(OrderItem item) {
-        updateOrder(item);
+        foodPresenter.addOrder(item);
     }
 
     @Override
     public void onLongClick(OrderItem item) {
-        removeOrder(item);
+        foodPresenter.deleteOrder(item);
+    }
+
+    @Override
+    public void onLoadSuccess(List<OrderItem> orderItems) {
+        if (itemList.size() != 0) {
+            itemList.clear();
+        }
+        itemList.addAll(orderItems);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onLoadFailed(String message) {
+        Log.d(TAG, "onLoadFailed: " + message);
+    }
+
+    @Override
+    public void onLoadError(String error) {
+        Log.d(TAG, "onLoadError: " + error);
+    }
+
+    @Override
+    public void onOrderVisible() {
+        imgOrder.setImageResource(R.drawable.ic_cart);
+        imgOrder.setOnClickListener(view -> {
+            Intent i = new Intent(this, OrderActivity.class);
+            startActivity(i);
+        });
+        imgOrder.setVisibility(View.VISIBLE);
+        if (!isAppear) {
+            isAppear = true;
+            onAppear(imgOrder);
+        }
+    }
+
+    @Override
+    public void onOrderInvisible() {
+        if (imgOrder.getVisibility() == View.VISIBLE) {
+            imgOrder.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void onViewRemoved(OrderItem item) {
+        String message = item.getQuantity() + " items removed.";
+        Snackbar snackbar = Snackbar.make(getWindow().getDecorView().getRootView(), message, Snackbar.LENGTH_SHORT);
+        snackbar.show();
     }
 }
