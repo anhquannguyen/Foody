@@ -17,7 +17,7 @@
         android:required="true" />
 
     <application
-        android:name=".MyApplication"
+        android:name=".services.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -25,7 +25,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".view.ui.SplashScreen"
+            android:name=".ui.SplashScreen"
             android:screenOrientation="portrait"
             android:theme="@style/SpashScreen">
             <intent-filter>
@@ -35,24 +35,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.ui.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".view.ui.FoodActivity"
+            android:name=".ui.food.FoodActivity"
             android:label="@string/food_activity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".view.ui.OrderActivity"
+            android:name=".ui.order.OrderActivity"
             android:label="@string/order_activity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
-            android:name=".view.ui.SigninActivity"
+            android:name=".ui.login.LoginActivity"
             android:label="@string/signin_activity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
-            android:name=".view.ui.CheckoutActivity"
+            android:name=".ui.checkout.CheckoutActivity"
             android:label="@string/checkout_activity"
             android:theme="@style/AppTheme.NoActionBar" />
 
@@ -62,7 +62,7 @@
             android:value="@string/google_API" />
         <!-- Broadcast detecting network status -->
         <receiver
-            android:name=".ConnectivityReceiver"
+            android:name=".services.ConnectivityReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
