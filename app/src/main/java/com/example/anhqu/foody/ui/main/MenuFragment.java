@@ -18,11 +18,9 @@ import com.example.anhqu.foody.R;
 import com.example.anhqu.foody.data.database.model.Menu;
 import com.example.anhqu.foody.data.network.ApiClient;
 import com.example.anhqu.foody.data.network.ApiInterface;
-import com.example.anhqu.foody.util.GridSpacingItemDecoration;
-import com.example.anhqu.foody.util.RecyclerTouchListener;
-import com.example.anhqu.foody.ui.main.MenuAdapter;
+import com.example.anhqu.foody.utils.GridSpacingItemDecoration;
+import com.example.anhqu.foody.utils.RecyclerTouchListener;
 import com.example.anhqu.foody.ui.food.FoodActivity;
-import com.example.anhqu.foody.ui.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;

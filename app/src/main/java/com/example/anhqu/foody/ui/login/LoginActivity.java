@@ -9,8 +9,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.anhqu.foody.R;
-import com.example.anhqu.foody.ui.checkout.CheckoutActivity;
 import com.example.anhqu.foody.ui.BaseActivity;
+import com.example.anhqu.foody.ui.checkout.CheckoutActivity;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -38,7 +38,7 @@ public class LoginActivity extends BaseActivity implements LoginView {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        presenter = new LoginPresenterImpl(this);
+        presenter = new LoginPresenterImpl(this,this);
     }
 
     @Override

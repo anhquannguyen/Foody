@@ -1,4 +1,4 @@
-package com.example.anhqu.foody.util;
+package com.example.anhqu.foody.utils;
 
 import android.content.res.Resources;
 import android.graphics.Rect;

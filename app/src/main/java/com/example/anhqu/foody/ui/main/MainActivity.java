@@ -24,7 +24,7 @@ import com.example.anhqu.foody.data.database.model.DrawerItem;
 import com.example.anhqu.foody.data.database.DaoRepository;
 import com.example.anhqu.foody.ui.BaseActivity;
 import com.example.anhqu.foody.ui.order.OrderActivity;
-import com.example.anhqu.foody.util.RecyclerTouchListener;
+import com.example.anhqu.foody.utils.RecyclerTouchListener;
 import com.example.anhqu.foody.ui.list.DrawerAdapter;
 
 import java.util.ArrayList;
