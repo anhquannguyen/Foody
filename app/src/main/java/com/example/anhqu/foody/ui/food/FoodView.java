@@ -7,7 +7,7 @@ import java.util.List;
 public interface FoodView {
     void onLoadSuccess(List<OrderItem> itemList);
 
-    void onLoadFailed(String message);
+    void onLoadFailed();
 
     void onLoadError(String error);
 

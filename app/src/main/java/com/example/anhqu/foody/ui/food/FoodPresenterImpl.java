@@ -36,7 +36,7 @@ public class FoodPresenterImpl implements FoodPresenter {
                     } else {
                         getApi(id);
                     }
-                }, throwable -> foodView.onLoadFailed(throwable.toString()));
+                });
         compositeDisposable.add(disposable);
     }
 
@@ -44,9 +44,9 @@ public class FoodPresenterImpl implements FoodPresenter {
     public void getCount() {
         Disposable disposable = repository.countInOrder().observeOn(AndroidSchedulers.mainThread())
                 .subscribe(integer -> {
-                    if (integer != 0){
+                    if (integer != 0) {
                         foodView.onOrderVisible();
-                    }else {
+                    } else {
                         foodView.onOrderInvisible();
                     }
                 });
@@ -62,11 +62,11 @@ public class FoodPresenterImpl implements FoodPresenter {
 
     @Override
     public void deleteOrder(OrderItem item) {
+        foodView.onViewRemoved(item);
         item.setQuantity(0);
         item.setTotalPrice(0);
         Disposable disposable = repository.updateOrder(item).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
-                    foodView.onViewRemoved(item);
                     getCount();
                 });
         compositeDisposable.add(disposable);
@@ -81,6 +81,8 @@ public class FoodPresenterImpl implements FoodPresenter {
                     itemList.add(new OrderItem(o));
                 }
                 addOrder(itemList, id);
+            } else {
+                foodView.onLoadFailed();
             }
         }, throwable -> foodView.onLoadError(throwable.toString()));
         compositeDisposable.add(disposable);
@@ -92,7 +94,7 @@ public class FoodPresenterImpl implements FoodPresenter {
         compositeDisposable.add(disposable);
     }
 
-    public void clearDisposables() {
+    void clearDisposables() {
         if (compositeDisposable != null && !compositeDisposable.isDisposed()) {
             compositeDisposable.clear();
         }

@@ -14,6 +14,7 @@ import android.view.animation.OvershootInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.anhqu.foody.R;
 import com.example.anhqu.foody.data.database.model.OrderItem;
@@ -52,14 +53,17 @@ public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInt
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        foodPresenter = new FoodPresenterImpl(this, this);
+        itemList = new ArrayList<>();
+
+        // Get menu_id from MenuFragment to get foods by menu_id
         Intent i = getIntent();
         if (i != null) {
             id = i.getStringExtra("menu_id");
         }
-        foodPresenter = new FoodPresenterImpl(this, this);
-        itemList = new ArrayList<>();
-
         setRecyclerView();
+
+        // Call to api and get foods
         foodPresenter.getFoods(id);
     }
 
@@ -71,16 +75,24 @@ public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInt
     @Override
     protected void onResume() {
         super.onResume();
+
+        // If adapter's been clear, reload list from db
         if (isClear) {
             foodPresenter.getFoods(id);
         }
+
+        // Get counting from orderlist to load imgOrder
         foodPresenter.getCount();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+
+        // Clear adapter
         clearAdapter();
+
+        // Check imgOrder is appear?
         if (isAppear) {
             isAppear = false;
         }
@@ -114,6 +126,8 @@ public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInt
     }
 
     public void onAppear(View view) {
+
+        // imgOrder animation
         ScaleAnimation scale = new ScaleAnimation(0, 1, 0, 1, ScaleAnimation.RELATIVE_TO_SELF, .5f, ScaleAnimation.RELATIVE_TO_SELF, .5f);
         scale.setDuration(300);
         scale.setInterpolator(new OvershootInterpolator());
@@ -140,8 +154,8 @@ public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInt
     }
 
     @Override
-    public void onLoadFailed(String message) {
-        Log.d(TAG, "onLoadFailed: " + message);
+    public void onLoadFailed() {
+        Toast.makeText(this, "Cannot load data!", Toast.LENGTH_SHORT).show();
     }
 
     @Override

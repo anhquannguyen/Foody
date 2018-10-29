@@ -55,14 +55,20 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
                 .into(holder.image);
         holder.textName.setText(object.getfName());
         holder.textPrice.setText(String.format("$ %s", object.getfPrice()));
+        holder.btnDelete.setVisibility(View.INVISIBLE);
+
+        // quantity = 0, hiding text
         if (item.getQuantity() == 0) {
-            holder.btnDelete.setVisibility(View.INVISIBLE);
             holder.textQuant.setVisibility(View.INVISIBLE);
         } else {
+
+            // quantity != 0, unhidden text if it's hidden before
+            if (holder.textQuant.getVisibility() == View.INVISIBLE) {
+                holder.textQuant.setVisibility(View.VISIBLE);
+            }
             holder.textQuant.setText(String.format("x%s", item.getQuantity()));
         }
 
-        // Set onclick interface
         onClickListener(item, holder);
     }
 
@@ -86,11 +92,13 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
             if (holder.textQuant.getVisibility() == View.VISIBLE) {
                 holder.textQuant.setVisibility(View.INVISIBLE);
-
                 holder.btnDelete.setVisibility(View.VISIBLE);
+                holder.foodRow.setClickable(false);
+
                 if (context instanceof FoodActivity) {
                     ((FoodActivity) context).onAppear(holder.btnDelete);
                 }
+
                 holder.btnDelete.setOnClickListener(v -> {
                     if (anInterface != null) {
                         anInterface.onLongClick(item);
@@ -132,4 +140,5 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             ButterKnife.bind(this, itemView);
         }
     }
+
 }

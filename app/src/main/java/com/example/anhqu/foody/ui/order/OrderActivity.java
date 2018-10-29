@@ -15,26 +15,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.anhqu.foody.R;
-import com.example.anhqu.foody.data.prefs.SessionManager;
 import com.example.anhqu.foody.data.database.model.OrderItem;
-import com.example.anhqu.foody.data.database.DaoRepository;
+import com.example.anhqu.foody.data.prefs.SessionManager;
+import com.example.anhqu.foody.ui.BaseActivity;
 import com.example.anhqu.foody.ui.checkout.CheckoutActivity;
 import com.example.anhqu.foody.ui.login.LoginActivity;
-import com.example.anhqu.foody.ui.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.subjects.BehaviorSubject;
 
 /**
  * Created by anhqu on 7/5/2018.
  */
 
-public class OrderActivity extends BaseActivity implements OrderAdapter.onClickInterface, SheetOrderFragment.EditOrderInterface {
+public class OrderActivity extends BaseActivity implements OrderAdapter.onClickInterface,
+        DetailSheetFragment.EditOrderInterface, OrderView {
     private static final String KEY_DATA = "order_data";
     private static final String KEY_POS = "order_position";
     @BindView(R.id.recyclerView)
@@ -50,10 +48,10 @@ public class OrderActivity extends BaseActivity implements OrderAdapter.onClickI
     @BindView(R.id.img_action)
     ImageView imgOrder;
     private OrderAdapter adapter;
-    private DaoRepository repository;
+    private OrderPresenterImpl presenter;
     private List<OrderItem> itemList;
-    private BehaviorSubject<Double> dSubject;
     private double totalPrice;
+    private double excPrice;
     private int rowHeight;
 
     @Override
@@ -64,20 +62,24 @@ public class OrderActivity extends BaseActivity implements OrderAdapter.onClickI
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
-        repository = new DaoRepository(this);
+        presenter = new OrderPresenterImpl(this, this);
         itemList = new ArrayList<>();
-        dSubject = BehaviorSubject.create();
 
         setRecyclerView();
         setImgAction();
-        getOrder();
-        observerSheetView();
+        presenter.getOrders();
+        presenter.updateTotalPrice();
     }
 
     @Override
     protected int getLayoutResourceId() {
         return R.layout.activity_order;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.clearDisposables();
     }
 
     @Override
@@ -96,91 +98,24 @@ public class OrderActivity extends BaseActivity implements OrderAdapter.onClickI
 
     private void setImgAction() {
         imgOrder.setImageResource(R.drawable.ic_clear);
-        imgOrder.setOnClickListener(view -> {
-            this.finish();
-            clearOrder(itemList);
-        });
         imgOrder.setVisibility(View.VISIBLE);
     }
 
-    private void getOrder() {
-        // Get list item in Room db
-        repository.getInOrder().observeOn(AndroidSchedulers.mainThread())
-                .subscribe((List<OrderItem> orderItems) -> {
-                    if (orderItems.size() != 0) {
-                        for (OrderItem item : orderItems) {
-                            totalPrice += item.getTotalPrice();
-                        }
-                        dSubject.onNext(totalPrice);
-                        itemList.addAll(orderItems);
-                        adapter.notifyDataSetChanged();
-                    }
-                }, throwable -> Log.d(TAG, "getOrder: " + throwable));
-    }
-
-    private void updateOrder(OrderItem item, int position) {
-        // Update item in order
-        repository.updateOrder(item).subscribe(() -> {
-            itemList.get(position).setQuantity(item.getQuantity());
-            itemList.get(position).setTotalPrice(item.getTotalPrice());
-            adapter.notifyItemChanged(position);
-        }, throwable -> Log.d(TAG, "updateOrder: " + throwable));
-    }
-
-    private void removeInOrder(OrderItem item, int position) {
-        // Remove item in order
-        repository.updateOrder(item).observeOn(AndroidSchedulers.mainThread()).subscribe(() -> {
-            itemList.remove(position);
-            adapter.notifyItemRemoved(position);
-            adapter.notifyItemRangeChanged(position, itemList.size());
-
-            // update total price
-            double newPrice = totalPrice - item.getTotalPrice();
-            dSubject.onNext(newPrice);
-
-            // update params
-            updateRecyclerParam();
-        }, throwable -> Log.d(TAG, "removeOrder: " + throwable));
-        if (itemList.size() == 0) {
-            this.finish();
-        }
-    }
-
-    private void clearOrder(List<OrderItem> orderItems) {
-        if (orderItems.size() != 0) {
-            for (OrderItem item : orderItems) {
-                // Set instance one by one
-                // Then update into Room db
-                item.setQuantity(0);
-                item.setTotalPrice(0);
-                repository.updateOrder(item).observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(() -> {
-                        }, throwable -> Log.d(TAG, "clearOrder: " + throwable));
-            }
-            orderItems.clear();
-            adapter.notifyDataSetChanged();
-        }
-    }
-
     private void showBottomSheet(int position) {
+
         // Transaction item and position to bottomSheet
         OrderItem item = itemList.get(position);
         Bundle b = new Bundle();
         b.putParcelable(KEY_DATA, item);
         b.putInt(KEY_POS, position);
-        SheetOrderFragment f = new SheetOrderFragment();
+        DetailSheetFragment f = new DetailSheetFragment();
         f.setAnInterface(this);
         f.setArguments(b);
         f.show(getSupportFragmentManager(), f.getTag());
     }
 
-    private void observerSheetView() {
-        dSubject.observeOn(AndroidSchedulers.mainThread()).subscribe(aDouble -> {
-            txtPrice.setText(String.format("%s $", aDouble));
-        });
-    }
-
     private void updateRecyclerParam() {
+
         // Update height RecyclerView dynamically when remove item
         this.runOnUiThread(() -> {
             int recyclerH = recyclerView.getHeight();
@@ -193,29 +128,80 @@ public class OrderActivity extends BaseActivity implements OrderAdapter.onClickI
     public void onClick(int pos, int h) {
         // Callback to Adapter
         showBottomSheet(pos);
-        // set height
+        // Set height
         rowHeight = h;
     }
 
     @Override
-    public void onEdit(OrderItem item, int position) {
-        // Callback to bottomSheet
-        if (item.getQuantity() != 0) {
-            updateOrder(item, position);
-        } else {
-            removeInOrder(item, position);
+    public void onEdit(OrderItem item, int position, double excTotalP) {
+        excPrice = excTotalP;
+        if (item.getQuantity() != 0)
+            presenter.updateOrder(item, position);
+        else presenter.deleteOrder(item, position);
+    }
+
+    @OnClick({R.id.btn_checkout, R.id.img_action})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_checkout:
+                Intent i;
+                boolean isloggedin = new SessionManager(this).isLoggedIn();
+                if (isloggedin)
+                    i = new Intent(OrderActivity.this, CheckoutActivity.class);
+                else
+                    i = new Intent(OrderActivity.this, LoginActivity.class);
+                startActivity(i);
+                break;
+            case R.id.img_action:
+                presenter.clearOrders(itemList);
+                break;
         }
     }
 
-    @OnClick(R.id.btn_checkout)
-    public void onViewClicked() {
-        Intent i;
-        boolean isloggedin = new SessionManager(this).isLoggedIn();
-        if (isloggedin) {
-            i = new Intent(OrderActivity.this, CheckoutActivity.class);
-        } else {
-            i = new Intent(OrderActivity.this, LoginActivity.class);
+    @Override
+    public void onloadData(List<OrderItem> orderItems) {
+        if (orderItems.size() != 0)
+            for (OrderItem item : orderItems) {
+                totalPrice += item.getTotalPrice();
+            }
+        itemList.addAll(orderItems);
+        adapter.notifyDataSetChanged();
+        presenter.setTotalPrice(totalPrice);
+    }
+
+    @Override
+    public void onUpdateSuccess(int position) {
+        adapter.notifyItemChanged(position);
+        presenter.setTotalPrice(totalPrice += excPrice);
+    }
+
+    @Override
+    public void onDeleteSuccess(OrderItem item, int position) {
+        itemList.remove(position);
+        adapter.notifyItemRemoved(position);
+        adapter.notifyItemRangeChanged(position, itemList.size());
+        if (itemList.size() == 0)
+            this.finish();
+        else {
+            presenter.setTotalPrice(totalPrice += excPrice);
+
+            // Update params
+            updateRecyclerParam();
         }
-        startActivity(i);
+    }
+
+    @Override
+    public void onClearSuccess(List<OrderItem> orderItems) {
+        this.finish();
+    }
+
+    @Override
+    public void totalPriceUpdate(double total) {
+        txtPrice.setText(String.format("%s $", total));
+    }
+
+    @Override
+    public void onHandleDataFailed(String error) {
+        Log.d(TAG, "onHandleDataFailed: " + error);
     }
 }

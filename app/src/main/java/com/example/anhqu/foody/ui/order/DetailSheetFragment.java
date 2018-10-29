@@ -21,9 +21,8 @@ import butterknife.Unbinder;
  * Created by anhqu on 8/6/2018.
  */
 
-public class SheetOrderFragment extends BottomSheetDialogFragment {
+public class DetailSheetFragment extends BottomSheetDialogFragment {
 
-    private final String TAG = this.getTag();
     @BindView(R.id.text_name)
     TextView textName;
     @BindView(R.id.btn_minus)
@@ -39,9 +38,11 @@ public class SheetOrderFragment extends BottomSheetDialogFragment {
     Unbinder unbinder;
     private OrderItem item;
     private int orderPos;
+    private double currTotalP;
+    double excTotalP;
     private EditOrderInterface anInterface;
 
-    public SheetOrderFragment() {
+    public DetailSheetFragment() {
     }
 
     public void setAnInterface(EditOrderInterface anInterface) {
@@ -71,6 +72,7 @@ public class SheetOrderFragment extends BottomSheetDialogFragment {
 
     private void setViewData() {
         btnAdd.setText(R.string.action_update_cart);
+
         // Get data from bundle
         Bundle b = getArguments();
         if (b != null) {
@@ -79,6 +81,7 @@ public class SheetOrderFragment extends BottomSheetDialogFragment {
 
             if (item != null) {
                 textName.setText(item.getFood().getfName());
+                currTotalP = item.getTotalPrice();
                 textPrice.setText(String.format("Price: %s$", item.getTotalPrice()));
                 txtQuant.setText(String.format("%s", item.getQuantity()));
             }
@@ -88,36 +91,36 @@ public class SheetOrderFragment extends BottomSheetDialogFragment {
     @OnClick({R.id.btn_minus, R.id.btn_plus, R.id.btn_update})
     public void onViewClicked(View view) {
         int quantity = Integer.parseInt(txtQuant.getText().toString());
-        boolean b = false;
+        boolean isUpdateClicked = false;
         switch (view.getId()) {
             case R.id.btn_minus:
                 if (quantity > 0)
                     quantity -= 1;
-                b = true;
                 break;
             case R.id.btn_plus:
                 quantity += 1;
-                b = true;
                 break;
             case R.id.btn_update:
                 item.setQuantity(quantity);
-                item.setTotalPrice(quantity*item.getFood().getfPrice());
+                item.setTotalPrice(quantity * item.getFood().getfPrice());
                 if (anInterface != null)
-                    anInterface.onEdit(item, orderPos);
+                    anInterface.onEdit(item, orderPos, excTotalP);
                 if (this.isVisible())
                     this.dismiss();
+                isUpdateClicked = true;
                 break;
         }
-        if (b) {
+        if (!isUpdateClicked) {
             int finalQuantity = quantity;
-            double totalP = quantity*item.getFood().getfPrice();
+            double newTotalP = quantity * item.getFood().getfPrice();
+            excTotalP = newTotalP - currTotalP;
 
             // Update UI dynamically
             getActivity().runOnUiThread(() -> {
                 txtQuant.setText(String.format("%s", finalQuantity));
-                textPrice.setText(String.format("Price: %s$", totalP));
+                textPrice.setText(String.format("Price: %s$", newTotalP));
                 btnAdd.setText(R.string.action_update_cart);
-                if (finalQuantity == 0){
+                if (finalQuantity == 0) {
                     btnAdd.setText(R.string.action_remove_cart);
                 }
             });
@@ -126,6 +129,6 @@ public class SheetOrderFragment extends BottomSheetDialogFragment {
 
     // Listen for change of update
     public interface EditOrderInterface {
-        void onEdit(OrderItem item, int position);
+        void onEdit(OrderItem item, int position, double excTotalP);
     }
 }
