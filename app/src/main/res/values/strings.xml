@@ -17,7 +17,7 @@
     <string name="action_update_cart">Update</string>
     <string name="action_remove_cart">Remove Item</string>
     <string name="text_fee">Fee Shipping</string>
-    <string name="text_tip">Tip</string>
+    <string name="text_tip">Tax</string>
     <string name="text_total">Order Total</string>
     <string name="action_checkout">Go to checkout</string>
     <string name="text_set_location">Delivery address</string>

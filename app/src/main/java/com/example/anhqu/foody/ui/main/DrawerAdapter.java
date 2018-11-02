@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.example.anhqu.foody.R;
 import com.example.anhqu.foody.data.database.model.DrawerItem;
-import com.example.anhqu.foody.ui.main.MainActivity;
 
 import java.util.List;
 

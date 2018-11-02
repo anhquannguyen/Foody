@@ -13,13 +13,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.anhqu.foody.R;
-import com.example.anhqu.foody.data.prefs.SessionManager;
-import com.example.anhqu.foody.data.database.model.Order;
 import com.example.anhqu.foody.data.database.model.Payment;
-import com.example.anhqu.foody.data.network.ApiClient;
-import com.example.anhqu.foody.data.network.ApiInterface;
-import com.example.anhqu.foody.data.database.DaoRepository;
+import com.example.anhqu.foody.data.prefs.SessionManager;
 import com.example.anhqu.foody.ui.BaseActivity;
+import com.example.anhqu.foody.utils.RecyclerTouchListener;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -29,13 +26,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by anhqu on 9/23/2018.
  */
 
-public class CheckOutActivity extends BaseActivity {
+public class CheckOutActivity extends BaseActivity implements CheckoutView {
     private static final int PLACE_PICKER_REQUEST = 1;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -48,11 +44,12 @@ public class CheckOutActivity extends BaseActivity {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     PaymentAdapter adapter;
-    List<Payment> payments;
+    List<Payment> paymentList;
     PlacePicker.IntentBuilder builder;
     @BindView(R.id.img_action)
     ImageView imgAction;
     SessionManager sessionManager;
+    CheckoutPresenterImpl checkoutPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,10 +58,12 @@ public class CheckOutActivity extends BaseActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        checkoutPresenter = new CheckoutPresenterImpl(this, this);
         sessionManager = new SessionManager(this);
         builder = new PlacePicker.IntentBuilder();
         setRecyclerView();
         setTextView();
+        checkoutPresenter.loadPayment();
     }
 
     @Override
@@ -79,12 +78,23 @@ public class CheckOutActivity extends BaseActivity {
     }
 
     private void setRecyclerView() {
-        payments = new Payment().getPayment();
-        adapter = new PaymentAdapter(payments, this);
+        paymentList = new Payment().getPayment();
+        adapter = new PaymentAdapter(paymentList, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, 1, false));
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(adapter);
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(this, recyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
     }
 
     private void setTextView() {
@@ -102,28 +112,11 @@ public class CheckOutActivity extends BaseActivity {
         }
     }
 
-    private void setPlaceOrder(){
+    private void setPlaceOrder() {
         int uId = sessionManager.getUserId();
         String location = sessionManager.getAddress();
-        new DaoRepository(this).getInOrder()
-                .subscribe(orderItems -> {
-                    Order order = new Order(uId, "2018-10-06 9:00:00", location, 1, orderItems);
-                    placeOrder(order);
-                });
+        checkoutPresenter.placeOrder(uId, "2018-11-10 20:33:10", location, 3);
 
-    }
-
-    private void placeOrder(Order order){
-        final ApiInterface api = ApiClient.getClient().create(ApiInterface.class);
-        api.place(order).subscribeOn(Schedulers.io())
-                .subscribe((aBoolean, throwable) -> {
-                    if (aBoolean != null) {
-                        Log.d(TAG, "onViewClicked: " + aBoolean);
-                    }
-                    if (throwable != null) {
-                        Log.d(TAG, "onViewClicked: " + throwable);
-                    }
-                });
     }
 
     @Override
@@ -137,7 +130,6 @@ public class CheckOutActivity extends BaseActivity {
         }
     }
 
-
     @OnClick({R.id.card_datetime, R.id.act_add_loct, R.id.btn_place_order})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -150,5 +142,26 @@ public class CheckOutActivity extends BaseActivity {
                 setPlaceOrder();
                 break;
         }
+    }
+
+    @Override
+    public void onPlaceSucess() {
+        Intent i = new Intent();
+    }
+
+    @Override
+    public void onPlaceFailed() {
+
+    }
+
+    @Override
+    public void onLoadPayment(List<Payment> payments) {
+        paymentList.addAll(payments);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onError(String msg) {
+        Log.d(TAG, "onError: " + msg);
     }
 }
