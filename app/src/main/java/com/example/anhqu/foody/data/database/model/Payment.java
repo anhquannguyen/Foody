@@ -57,7 +57,8 @@ public class Payment implements Serializable {
     public List<Payment> getPayment() {
         List<Payment> payments = new ArrayList<>();
         payments.add(new Payment(1, "MasterCard/Visa", R.drawable.ic_payment));
-        payments.add(new Payment(2, "Paypal", R.drawable.ic_paypal));
+        payments.add(new Payment(2, "Paypal", 1));
+        payments.add(new Payment(3, "Cash on delivery", 1));
         return payments;
     }
 }

@@ -74,7 +74,7 @@ public class FoodPresenterImpl implements FoodPresenter {
 
     private void getApi(String id) {
         final ApiInterface api = ApiClient.getClient().create(ApiInterface.class);
-        Disposable disposable = api.get(id).subscribeOn(Schedulers.io()).subscribe(foods -> {
+        Disposable disposable = api.getFood(id).subscribeOn(Schedulers.io()).subscribe(foods -> {
             if (foods != null) {
                 List<OrderItem> itemList = new ArrayList<>();
                 for (Food o : foods) {

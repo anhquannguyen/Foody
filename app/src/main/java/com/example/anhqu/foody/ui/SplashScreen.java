@@ -30,10 +30,11 @@ public class SplashScreen extends BaseActivity {
         handler.postDelayed(() -> {
             ViewCompat.animate(imgLogo)
                     .translationY(-250f)
-                    .setStartDelay(250)
-                    .setDuration(1000).setInterpolator(new DecelerateInterpolator(1.2f)).start();
-            Intent i = new Intent(SplashScreen.this,MainActivity.class);
+                    .setStartDelay(100)
+                    .setDuration(500).setInterpolator(new DecelerateInterpolator(1.2f)).start();
+            Intent i = new Intent(SplashScreen.this, MainActivity.class);
             startActivity(i);
-        },1000);
+            finish();
+        }, 1000);
     }
 }

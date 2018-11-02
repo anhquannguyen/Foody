@@ -18,7 +18,7 @@ import com.example.anhqu.foody.R;
 import com.example.anhqu.foody.data.database.model.OrderItem;
 import com.example.anhqu.foody.data.prefs.SessionManager;
 import com.example.anhqu.foody.ui.BaseActivity;
-import com.example.anhqu.foody.ui.checkout.CheckoutActivity;
+import com.example.anhqu.foody.ui.checkout.CheckOutActivity;
 import com.example.anhqu.foody.ui.login.LoginActivity;
 
 import java.util.ArrayList;
@@ -79,7 +79,6 @@ public class OrderActivity extends BaseActivity implements OrderAdapter.onClickI
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        presenter.clearDisposables();
     }
 
     @Override
@@ -147,7 +146,7 @@ public class OrderActivity extends BaseActivity implements OrderAdapter.onClickI
                 Intent i;
                 boolean isloggedin = new SessionManager(this).isLoggedIn();
                 if (isloggedin)
-                    i = new Intent(OrderActivity.this, CheckoutActivity.class);
+                    i = new Intent(OrderActivity.this, CheckOutActivity.class);
                 else
                     i = new Intent(OrderActivity.this, LoginActivity.class);
                 startActivity(i);
@@ -180,9 +179,10 @@ public class OrderActivity extends BaseActivity implements OrderAdapter.onClickI
         itemList.remove(position);
         adapter.notifyItemRemoved(position);
         adapter.notifyItemRangeChanged(position, itemList.size());
-        if (itemList.size() == 0)
+        if (itemList.size() == 0) {
             this.finish();
-        else {
+            presenter.clearDisposables();
+        } else {
             presenter.setTotalPrice(totalPrice += excPrice);
 
             // Update params
@@ -191,8 +191,9 @@ public class OrderActivity extends BaseActivity implements OrderAdapter.onClickI
     }
 
     @Override
-    public void onClearSuccess(List<OrderItem> orderItems) {
+    public void onClearSuccess() {
         this.finish();
+        presenter.clearDisposables();
     }
 
     @Override

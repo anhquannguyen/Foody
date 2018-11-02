@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.example.anhqu.foody.R;
 import com.example.anhqu.foody.ui.BaseActivity;
-import com.example.anhqu.foody.ui.checkout.CheckoutActivity;
+import com.example.anhqu.foody.ui.checkout.CheckOutActivity;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -83,7 +83,7 @@ public class LoginActivity extends BaseActivity implements LoginView {
 
     @Override
     public void onLoginSuccess() {
-        Intent intent = new Intent(this, CheckoutActivity.class);
+        Intent intent = new Intent(this, CheckOutActivity.class);
         startActivity(intent);
         finish();
     }

@@ -43,6 +43,7 @@ public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInt
     private FoodAdapter adapter;
     private List<OrderItem> itemList;
     private String id;
+    private String title;
     private boolean isClear = false;
     private boolean isAppear = false;
 
@@ -60,10 +61,10 @@ public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInt
         Intent i = getIntent();
         if (i != null) {
             id = i.getStringExtra("menu_id");
+            title = i.getStringExtra("menu_name");
         }
+        getSupportActionBar().setTitle(title);
         setRecyclerView();
-
-        // Call to api and get foods
         foodPresenter.getFoods(id);
     }
 
@@ -75,7 +76,6 @@ public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInt
     @Override
     protected void onResume() {
         super.onResume();
-
         // If adapter's been clear, reload list from db
         if (isClear) {
             foodPresenter.getFoods(id);
@@ -88,7 +88,6 @@ public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInt
     @Override
     protected void onStop() {
         super.onStop();
-
         // Clear adapter
         clearAdapter();
 
@@ -119,7 +118,7 @@ public class FoodActivity extends BaseActivity implements FoodAdapter.onClickInt
         recyclerView.setAdapter(adapter);
     }
 
-    private void clearAdapter(){
+    private void clearAdapter() {
         itemList.clear();
         adapter.notifyDataSetChanged();
         isClear = true;

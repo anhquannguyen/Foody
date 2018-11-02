@@ -11,5 +11,8 @@
     <dimen name="card_corner_radius">0dp</dimen>
     <dimen name="layout_padding">45dp</dimen>
     <dimen name="img_food_size">100dp</dimen>
-    <dimen name="sheet_height">180dp</dimen>
+    <dimen name="sheet_height">150dp</dimen>
+    <dimen name="large_size">20sp</dimen>
+    <dimen name="medium_size">16sp</dimen>
+    <dimen name="small_size">13sp</dimen>
 </resources>

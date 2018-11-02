@@ -1,4 +1,4 @@
-package com.example.anhqu.foody.ui.main;
+package com.example.anhqu.foody.ui.main.menu;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,15 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 import com.example.anhqu.foody.R;
 import com.example.anhqu.foody.data.database.model.Menu;
 import com.example.anhqu.foody.data.network.ApiClient;
 import com.example.anhqu.foody.data.network.ApiInterface;
+import com.example.anhqu.foody.ui.food.FoodActivity;
+import com.example.anhqu.foody.ui.main.MainActivity;
 import com.example.anhqu.foody.utils.GridSpacingItemDecoration;
 import com.example.anhqu.foody.utils.RecyclerTouchListener;
-import com.example.anhqu.foody.ui.food.FoodActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +39,7 @@ import io.reactivex.schedulers.Schedulers;
 public class MenuFragment extends Fragment {
     private static final String KEY_RC = "recycler_data";
     private static final String KEY_ID = "menu_id";
+    private static final String KEY_NAME = "menu_name";
     private final String TAG = this.getTag();
     Unbinder unbinder;
     List<Menu> menuList;
@@ -46,8 +47,6 @@ public class MenuFragment extends Fragment {
     Bundle b;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
-    @BindView(R.id.rootView)
-    RelativeLayout rootView;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     View view;
@@ -118,7 +117,8 @@ public class MenuFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 String menuId = menuList.get(position).getmId();
-                foodActivity(menuId);
+                String menuName = menuList.get(position).getmName();
+                foodActivity(menuId, menuName);
             }
 
             @Override
@@ -130,7 +130,7 @@ public class MenuFragment extends Fragment {
 
     private Disposable getApi() {
         ApiInterface api = ApiClient.getClient().create(ApiInterface.class);
-        return api.get().subscribeOn(Schedulers.io())
+        return api.getMenu().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(subscription -> progressBar.setVisibility(View.VISIBLE))
                 .doOnComplete(() -> {
@@ -144,9 +144,10 @@ public class MenuFragment extends Fragment {
                 }, throwable -> Log.d(TAG, "getApi: " + throwable));
     }
 
-    private void foodActivity(String id) {
+    private void foodActivity(String id, String name) {
         Intent i = new Intent(getContext(), FoodActivity.class);
         i.putExtra(KEY_ID, id);
+        i.putExtra(KEY_NAME, name);
         getContext().startActivity(i);
     }
 }

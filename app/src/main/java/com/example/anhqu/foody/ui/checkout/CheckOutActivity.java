@@ -19,7 +19,6 @@ import com.example.anhqu.foody.data.database.model.Payment;
 import com.example.anhqu.foody.data.network.ApiClient;
 import com.example.anhqu.foody.data.network.ApiInterface;
 import com.example.anhqu.foody.data.database.DaoRepository;
-import com.example.anhqu.foody.ui.list.PaymentAdapter;
 import com.example.anhqu.foody.ui.BaseActivity;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -36,7 +35,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by anhqu on 9/23/2018.
  */
 
-public class CheckoutActivity extends BaseActivity {
+public class CheckOutActivity extends BaseActivity {
     private static final int PLACE_PICKER_REQUEST = 1;
     @BindView(R.id.toolbar)
     Toolbar toolbar;

@@ -1,4 +1,4 @@
-package com.example.anhqu.foody.ui.list;
+package com.example.anhqu.foody.ui.checkout;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

@@ -12,7 +12,7 @@ public interface OrderView {
 
     void onDeleteSuccess(OrderItem item, int position);
 
-    void onClearSuccess(List<OrderItem> orderItems);
+    void onClearSuccess();
 
     void totalPriceUpdate(double total);
 

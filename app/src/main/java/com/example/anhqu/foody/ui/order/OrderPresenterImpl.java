@@ -64,7 +64,7 @@ public class OrderPresenterImpl implements OrderPresenter {
                 item.setTotalPrice(0);
                 repository.updateOrder(item).observeOn(AndroidSchedulers.mainThread()).subscribe();
             }
-        orderView.onClearSuccess(orderItems);
+        orderView.onClearSuccess();
     }
 
     @Override

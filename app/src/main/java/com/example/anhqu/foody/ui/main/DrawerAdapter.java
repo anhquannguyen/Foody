@@ -1,4 +1,4 @@
-package com.example.anhqu.foody.ui.list;
+package com.example.anhqu.foody.ui.main;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -57,14 +57,11 @@ public class DrawerAdapter extends RecyclerView.Adapter {
 
             // hightlight selected item
             if (context instanceof MainActivity) {
-                ((MainActivity) context).setHandler(new MainActivity.RecyclerHandler() {
-                    @Override
-                    public void onAdapterHandler(int position) {
-                        if (position >= 0) {
-                            // IMPORTANT!
-                            clickPos = position;
-                            notifyDataSetChanged();
-                        }
+                ((MainActivity) context).setHandler(position1 -> {
+                    if (position1 >= 0) {
+                        // IMPORTANT!
+                        clickPos = position1;
+                        notifyDataSetChanged();
                     }
                 });
             }

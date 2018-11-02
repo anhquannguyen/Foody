@@ -6,7 +6,7 @@
     <string name="order_activity">Order</string>
     <string name="signin_activity">Sign in</string>
     <string name="signup_activity">Sign up</string>
-    <string name="checkout_activity">Checkout</string>
+    <string name="checkout_activity">Check Out</string>
     <string name="place_activity">Place order</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

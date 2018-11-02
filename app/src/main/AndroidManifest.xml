@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.anhqu.foody">
+
     <!-- To check internet connection status -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- To check network state whether data can be downloaded or not -->
@@ -9,7 +10,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- To determine user’s location using WiFi and mobile cell data -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!--  To determine user’s location using GPS -->
+    <!-- To determine user’s location using GPS -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-feature
@@ -52,7 +53,7 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
-            android:name=".ui.checkout.CheckoutActivity"
+            android:name=".ui.checkout.CheckOutActivity"
             android:label="@string/checkout_activity"
             android:theme="@style/AppTheme.NoActionBar" />
 
