@@ -26,4 +26,5 @@
     <string name="action_place_order">Place order</string>
     <string name="notification_conn">No network</string>
     <string name="button_retry">Retry</string>
+    <string name="text_done">Thanks for your order, your order is in process, we will ship to you soon , please check your list and contact us if there is any problem!</string>
 </resources>

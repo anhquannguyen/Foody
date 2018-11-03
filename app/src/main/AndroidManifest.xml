@@ -50,11 +50,16 @@
         <activity
             android:name=".ui.login.LoginActivity"
             android:label="@string/signin_activity"
+            android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".ui.checkout.CheckOutActivity"
             android:label="@string/checkout_activity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.CompleteActivity"
+            android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- Goolge API Key -->

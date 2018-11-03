@@ -16,6 +16,8 @@ import com.example.anhqu.foody.R;
 import com.example.anhqu.foody.data.database.model.Payment;
 import com.example.anhqu.foody.data.prefs.SessionManager;
 import com.example.anhqu.foody.ui.BaseActivity;
+import com.example.anhqu.foody.ui.CompleteActivity;
+import com.example.anhqu.foody.ui.order.OrderActivity;
 import com.example.anhqu.foody.utils.RecyclerTouchListener;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -146,7 +148,11 @@ public class CheckOutActivity extends BaseActivity implements CheckoutView {
 
     @Override
     public void onPlaceSucess() {
-        Intent i = new Intent();
+        Intent i = new Intent(CheckOutActivity.this, CompleteActivity.class);
+        startActivity(i);
+        finish();
+        if (OrderActivity.getInstance() != null)
+            OrderActivity.getInstance().finish();
     }
 
     @Override

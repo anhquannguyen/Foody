@@ -53,6 +53,7 @@ public class OrderActivity extends BaseActivity implements OrderAdapter.onClickI
     private double totalPrice;
     private double excPrice;
     private int rowHeight;
+    private static OrderActivity instance;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,11 +65,16 @@ public class OrderActivity extends BaseActivity implements OrderAdapter.onClickI
         }
         presenter = new OrderPresenterImpl(this, this);
         itemList = new ArrayList<>();
+        instance = this;
 
         setRecyclerView();
         setImgAction();
         presenter.getOrders();
         presenter.updateTotalPrice();
+    }
+
+    public static OrderActivity getInstance(){
+        return instance;
     }
 
     @Override
