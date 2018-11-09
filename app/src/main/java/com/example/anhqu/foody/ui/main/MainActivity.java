@@ -25,6 +25,7 @@ import com.example.anhqu.foody.data.prefs.SessionManager;
 import com.example.anhqu.foody.services.ConnectivityReceiver;
 import com.example.anhqu.foody.ui.BaseActivity;
 import com.example.anhqu.foody.ui.main.menu.MenuFragment;
+import com.example.anhqu.foody.ui.main.navigation.DrawerAdapter;
 import com.example.anhqu.foody.ui.main.ordered.OrderedFragment;
 import com.example.anhqu.foody.ui.order.OrderActivity;
 import com.example.anhqu.foody.utils.RecyclerTouchListener;
@@ -55,10 +56,6 @@ public class MainActivity extends BaseActivity {
     Disposable disposable;
     @BindView(R.id.appbar)
     AppBarLayout appbar;
-
-    public static boolean isConnected() {
-        return ConnectivityReceiver.isConnected();
-    }
 
     protected static List<DrawerItem> itemList() {
         List<DrawerItem> itemList = new ArrayList<>();

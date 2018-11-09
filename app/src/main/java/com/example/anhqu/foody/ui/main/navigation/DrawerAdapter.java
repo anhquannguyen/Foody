@@ -1,4 +1,4 @@
-package com.example.anhqu.foody.ui.main;
+package com.example.anhqu.foody.ui.main.navigation;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.anhqu.foody.R;
 import com.example.anhqu.foody.data.database.model.DrawerItem;
+import com.example.anhqu.foody.ui.main.MainActivity;
 
 import java.util.List;
 

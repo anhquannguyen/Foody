@@ -11,7 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.anhqu.foody.R;
 import com.example.anhqu.foody.data.database.model.Menu;
@@ -24,9 +26,11 @@ import com.example.anhqu.foody.utils.RecyclerTouchListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -49,26 +53,21 @@ public class MenuFragment extends Fragment {
     ProgressBar progressBar;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
-    View view;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (MainActivity.isConnected()) {
-            view = inflater.inflate(R.layout.fragment_menu, container, false);
-            unbinder = ButterKnife.bind(this, view);
-            setRecyclerView();
-            getApi();
-            return view;
-        } else {
-            view = inflater.inflate(R.layout.layout_no_connect, container, false);
-            return view;
-        }
+        View view = inflater.inflate(R.layout.fragment_menu, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setRecyclerView();
+        getMenu();
+        fetchMenu();
     }
 
     @Override
@@ -102,7 +101,7 @@ public class MenuFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getApi().dispose();
+        getMenu().dispose();
     }
 
     private void setRecyclerView() {
@@ -128,7 +127,11 @@ public class MenuFragment extends Fragment {
         }));
     }
 
-    private Disposable getApi() {
+    private void fetchMenu(){
+        MainActivity.getNetworkStatus().subscribe(aBoolean ->  Log.d(TAG, "fetchMenu: "+Thread.currentThread().getName()));
+    }
+
+    private Disposable getMenu() {
         ApiInterface api = ApiClient.getClient().create(ApiInterface.class);
         return api.getMenu().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -149,5 +152,10 @@ public class MenuFragment extends Fragment {
         i.putExtra(KEY_ID, id);
         i.putExtra(KEY_NAME, name);
         getContext().startActivity(i);
+    }
+
+    @OnClick(R.id.txt_retry)
+    public void onViewClicked() {
+
     }
 }

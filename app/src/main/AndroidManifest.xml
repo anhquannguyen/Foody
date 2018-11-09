@@ -26,7 +26,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.SplashScreen"
+            android:name=".ui.SplashScActivity"
+            android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/SpashScreen">
             <intent-filter>

@@ -27,9 +27,6 @@ public class CompleteActivity extends BaseActivity {
 
     @OnClick(R.id.btn_done)
     public void onViewClicked() {
-        /*Intent i = new Intent(CompleteActivity.this, FoodActivity.class);
-        startActivity(i);
-        finish();*/
         onBackPressed();
     }
 }

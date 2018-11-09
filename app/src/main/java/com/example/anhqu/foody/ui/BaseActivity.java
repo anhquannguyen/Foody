@@ -10,6 +10,7 @@ import com.example.anhqu.foody.services.ConnectivityReceiver;
 import com.example.anhqu.foody.services.MyApplication;
 
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
 
 /**
  * Created by anhqu on 7/10/2017.
@@ -28,6 +29,11 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     protected abstract @LayoutRes
     int getLayoutResourceId();
+
+    public static Observable<Boolean> getNetworkStatus() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+        return Observable.just(isConnected);
+    }
 
     @Override
     protected void onResume() {
