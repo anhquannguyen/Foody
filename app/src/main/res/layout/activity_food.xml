@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".ui.food.FoodActivity">
+    tools:context="com.example.anhqu.orderApp.ui.food.FoodActivity">
 
     <include layout="@layout/app_bar_layout" />
 
