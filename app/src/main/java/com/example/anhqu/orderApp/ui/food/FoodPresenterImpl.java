@@ -11,6 +11,8 @@ import com.example.anhqu.orderApp.data.network.ApiInterface;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -29,7 +31,8 @@ public class FoodPresenterImpl implements FoodPresenter {
 
     @Override
     public void getFoods(String id) {
-        Disposable disposable = repository.getById(id).observeOn(AndroidSchedulers.mainThread())
+        Disposable disposable = repository.getById(id)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(orderItems -> {
                     if (orderItems.size() != 0) {
                         foodView.onLoadSuccess(orderItems);
@@ -55,7 +58,7 @@ public class FoodPresenterImpl implements FoodPresenter {
 
     @Override
     public void addOrder(OrderItem item) {
-        Disposable disposable = repository.updateOrder(item).observeOn(AndroidSchedulers.mainThread())
+        Disposable disposable = repository.updateOrder(item)
                 .subscribe(this::getCount);
         compositeDisposable.add(disposable);
     }
@@ -65,7 +68,7 @@ public class FoodPresenterImpl implements FoodPresenter {
         foodView.onViewRemoved(item);
         item.setQuantity(0);
         item.setTotalPrice(0);
-        Disposable disposable = repository.updateOrder(item).observeOn(AndroidSchedulers.mainThread())
+        Disposable disposable = repository.updateOrder(item)
                 .subscribe(() -> {
                     getCount();
                 });

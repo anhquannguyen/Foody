@@ -6,6 +6,7 @@ import com.example.anhqu.orderApp.data.network.ApiClient;
 import com.example.anhqu.orderApp.data.network.ApiInterface;
 import com.example.anhqu.orderApp.data.prefs.SessionManager;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -23,6 +24,7 @@ public class LoginPresenterImpl implements LoginPresenter {
     @Override
     public void onLogin(String username, String password) {
         ApiInterface api = ApiClient.getClient().create(ApiInterface.class);
+
         disposable = api.login(username, password).subscribeOn(Schedulers.io())
                 .map(users -> users.get(0))
                 .observeOn(AndroidSchedulers.mainThread())

@@ -5,6 +5,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="SpashScreen" parent="AppTheme.NoActionBar">
+        <item name="android:windowBackground">@drawable/background_screen</item>
+    </style>
+
     <style name="TextAppearence.App.TextInputLayout" parent="@android:style/TextAppearance">
         <item name="android:textColorHint">@android:color/white</item>
         <item name="colorControlNormal">@android:color/white</item>

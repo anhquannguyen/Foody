@@ -3,8 +3,11 @@ package com.example.anhqu.orderApp.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewCompat;
+
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 
@@ -29,19 +32,25 @@ public class SplashScActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ViewCompat.animate(imgLogo)
-                .translationY(-250)
-                .setStartDelay(ANIM_DELAY)
-                .setDuration(ANIM_DURATION)
-                .setInterpolator(new DecelerateInterpolator(1.2f))
-                .start();
+        //ContextCompat.getDrawable(this,R.drawable.image_main);
 
         Handler handler = new Handler();
         handler.postDelayed(() -> {
+            ViewCompat.animate(imgLogo)
+                    .translationY(-250)
+                    .setStartDelay(ANIM_DELAY)
+                    .setDuration(ANIM_DURATION)
+                    .setInterpolator(new DecelerateInterpolator(1.2f))
+                    .start();
+
             Intent i = new Intent(SplashScActivity.this, MainActivity.class);
-            //i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
             finish();
         }, ACTIVITY_DELAY);
+    }
+
+    @Override
+    public void onBackPressed() {
+        return;
     }
 }

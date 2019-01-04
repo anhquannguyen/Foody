@@ -1,10 +1,12 @@
 package com.example.anhqu.orderApp.ui.main.menu;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,9 +23,10 @@ import butterknife.ButterKnife;
  * Created by anhqu on 6/22/2017.
  */
 
-public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder> {
+public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder> implements Filterable {
     private List<Menu> menuList;
     private Context context;
+    private static int currentPosition = 0;
 
     public MenuAdapter(List<Menu> menuList, Context context) {
         this.menuList = menuList;
@@ -48,6 +51,11 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
     @Override
     public int getItemCount() {
         return menuList.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return null;
     }
 
     public class MenuViewHolder extends RecyclerView.ViewHolder {

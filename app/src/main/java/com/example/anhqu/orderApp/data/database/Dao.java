@@ -1,8 +1,8 @@
 package com.example.anhqu.orderApp.data.database;
 
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
+import androidx.room.Insert;
+import androidx.room.Query;
+import androidx.room.Update;
 
 import com.example.anhqu.orderApp.data.database.model.OrderItem;
 
@@ -14,7 +14,7 @@ import io.reactivex.Single;
 /**
  * Created by anhqu on 2/26/2018.
  */
-@android.arch.persistence.room.Dao
+@androidx.room.Dao
 public interface Dao {
 
     @Insert

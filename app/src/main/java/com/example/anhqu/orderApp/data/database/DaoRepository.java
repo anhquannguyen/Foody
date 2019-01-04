@@ -41,7 +41,6 @@ public class DaoRepository {
     public Completable updateOrder(OrderItem item) {
         return Completable.fromAction(() -> Database.getInstance(context)
                 .Dao().edit(item)).subscribeOn(Schedulers.io());
-
     }
 
 /*    public Completable removeOrder(OrderItem item) {

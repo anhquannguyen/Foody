@@ -1,7 +1,7 @@
 package com.example.anhqu.orderApp.data.database;
 
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
 import android.content.Context;
 
 import com.example.anhqu.orderApp.data.database.model.OrderItem;
@@ -10,7 +10,7 @@ import com.example.anhqu.orderApp.data.database.model.OrderItem;
  * Created by anhqu on 2/26/2018.
  */
 
-@android.arch.persistence.room.Database(entities = {OrderItem.class}, version = 1, exportSchema = false)
+@androidx.room.Database(entities = {OrderItem.class}, version = 1, exportSchema = false)
 public abstract class Database extends RoomDatabase {
     public static final String DATABASE_NAME = "database";
     private static Database instance;
